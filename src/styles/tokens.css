@@ -1,0 +1,62 @@
+/* Design tokens from spec/DESIGN.md (Style Guide + decisions). */
+:root {
+  /* Game colors */
+  --color-red: #ff3b30;
+  --color-yellow: #ffc107;
+  --color-green: #4cd964;
+  --color-blue: #3b82f6;
+
+  /* Neutral colors */
+  --color-charcoal: #1f2937;
+  --color-gray: #6b7280;
+  --color-light-gray: #e5e7eb;
+  --color-white: #f8fafc;
+
+  /* Semantic colors */
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  /* Screen background (dark theme) */
+  --color-bg: #111827;
+
+  /* Typography */
+  --font-family: 'Rubik', system-ui, sans-serif;
+
+  --h1-size: 32px;
+  --h1-weight: 700;
+  --h1-line: 1.2;
+
+  --h2-size: 24px;
+  --h2-weight: 600;
+  --h2-line: 1.3;
+
+  --h3-size: 18px;
+  --h3-weight: 500;
+  --h3-line: 1.4;
+
+  --body-size: 16px;
+  --body-weight: 400;
+  --body-line: 1.5;
+
+  --caption-size: 14px;
+  --caption-weight: 400;
+  --caption-line: 1.4;
+
+  /* Corners */
+  --radius-main: 12px;
+  --radius-card: 8px;
+  --radius-pill: 999px;
+
+  /* Borders */
+  --border-thin: 1px;
+  --border-thick: 2px;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  /* Spacing */
+  --space-x: 16px;
+  --space-y: 24px;
+}
