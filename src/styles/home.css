@@ -169,7 +169,8 @@
   align-items: center;
   gap: 12px;
   width: 100%;
-  min-height: 108px;
+  /* Tallest content (status line + start button), so the board never shifts between states. */
+  min-height: 88px;
 }
 
 .action__status {
