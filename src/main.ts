@@ -10,12 +10,8 @@ import '@fontsource/rubik/latin-600.css';
 import '@fontsource/rubik/latin-700.css';
 import './styles/tokens.css';
 import './styles/base.css';
-import { APP_TITLE } from './appInfo';
+import './styles/home.css';
+import { mountHomeScreen } from './ui/homeScreen';
 
-// Temporary placeholder page until the game screen is built.
 const app = document.querySelector<HTMLDivElement>('#app');
-if (app) {
-  const title = document.createElement('h1');
-  title.textContent = APP_TITLE;
-  app.append(title);
-}
+if (app) mountHomeScreen(app);

@@ -1,0 +1,325 @@
+/* Home screen: layout, board, actions, result states and corner decoration. */
+
+#app {
+  position: relative;
+  max-width: 420px;
+  min-height: 100dvh;
+  margin-inline: auto;
+  gap: 16px;
+  padding-top: calc(var(--space-y) + env(safe-area-inset-top));
+  padding-bottom: calc(var(--space-y) + env(safe-area-inset-bottom));
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.title {
+  margin-top: 8px;
+}
+
+/* --- Level pill --- */
+.level-pill {
+  padding: 6px 28px;
+  border: var(--border-thin) solid rgba(229, 231, 235, 0.25);
+  border-radius: var(--radius-pill);
+  background: var(--color-charcoal);
+  color: var(--color-light-gray);
+  font-size: var(--caption-size);
+  line-height: var(--caption-line);
+}
+
+/* --- Score --- */
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score__label {
+  color: var(--color-light-gray);
+  font-size: var(--caption-size);
+  line-height: var(--caption-line);
+}
+
+.score__value {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* --- Board --- */
+.board {
+  width: min(80vw, 320px, 42dvh);
+  aspect-ratio: 1;
+  padding: 10px;
+  border: var(--border-thick) solid #2b3646;
+  border-radius: 28px;
+  background: var(--color-board);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  touch-action: manipulation;
+}
+
+.board svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.segment {
+  cursor: pointer;
+  outline: none;
+}
+
+.segment__fill {
+  stroke-width: 10;
+  stroke-linejoin: round;
+}
+
+.segment__gloss {
+  pointer-events: none;
+  stroke: none;
+}
+
+.segment--yellow .segment__fill { fill: var(--color-yellow); stroke: var(--color-yellow); }
+.segment--green .segment__fill { fill: var(--color-green); stroke: var(--color-green); }
+.segment--blue .segment__fill { fill: var(--color-blue); stroke: var(--color-blue); }
+.segment--red .segment__fill { fill: var(--color-red); stroke: var(--color-red); }
+
+.board--dimmed .segment--yellow .segment__fill { fill: var(--color-yellow-dim); stroke: var(--color-yellow-dim); }
+.board--dimmed .segment--green .segment__fill { fill: var(--color-green-dim); stroke: var(--color-green-dim); }
+.board--dimmed .segment--blue .segment__fill { fill: var(--color-blue-dim); stroke: var(--color-blue-dim); }
+.board--dimmed .segment--red .segment__fill { fill: var(--color-red-dim); stroke: var(--color-red-dim); }
+.board--dimmed .segment__gloss { opacity: 0.4; }
+
+.board--locked .segment {
+  cursor: default;
+}
+
+.board .segment--lit .segment__fill {
+  filter: url(#board-glow);
+}
+
+.board .segment--yellow.segment--lit .segment__fill { fill: var(--color-yellow-lit); stroke: var(--color-yellow-lit); }
+.board .segment--green.segment--lit .segment__fill { fill: var(--color-green-lit); stroke: var(--color-green-lit); }
+.board .segment--blue.segment--lit .segment__fill { fill: var(--color-blue-lit); stroke: var(--color-blue-lit); }
+.board .segment--red.segment--lit .segment__fill { fill: var(--color-red-lit); stroke: var(--color-red-lit); }
+
+.segment--wrong {
+  animation: wrong-flash 0.3s steps(2, jump-none);
+}
+
+@keyframes wrong-flash {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+.segment:focus-visible .segment__fill {
+  stroke: var(--color-white);
+}
+
+.board__center {
+  fill: #151c28;
+  stroke: #2b3646;
+  stroke-width: 3;
+  pointer-events: none;
+}
+
+/* --- Action area --- */
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 108px;
+}
+
+.action__status {
+  max-width: 320px;
+}
+
+.action__speaker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: var(--border-thin) solid rgba(229, 231, 235, 0.25);
+  border-radius: 50%;
+  background: var(--color-charcoal);
+  color: var(--color-light-gray);
+}
+
+.action__speaker svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* --- Buttons --- */
+.btn {
+  width: 100%;
+  max-width: 320px;
+  min-height: 52px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 20px;
+  color: var(--color-white);
+  font-family: inherit;
+  font-size: var(--h3-size);
+  font-weight: 700;
+  line-height: var(--h3-line);
+  cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:focus-visible {
+  outline: var(--border-thick) solid var(--color-white);
+  outline-offset: 3px;
+}
+
+.btn--primary {
+  background: var(--color-charcoal);
+  border: var(--border-thin) solid rgba(229, 231, 235, 0.35);
+}
+
+.btn--danger {
+  background: var(--color-error);
+}
+
+.btn--info {
+  background: var(--color-info);
+}
+
+/* --- Result panel (success, game over, won) --- */
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 56px;
+}
+
+.result__icon-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.result__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  color: var(--color-white);
+}
+
+.result__icon svg {
+  width: 52px;
+  height: 52px;
+}
+
+.result__icon--success {
+  background: var(--color-success);
+  box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.3);
+}
+
+.result__icon--fail {
+  background: var(--color-error);
+  border: 5px solid #f87171;
+}
+
+.result__icon--won {
+  background: var(--color-charcoal);
+  border: 4px solid var(--color-info);
+  color: var(--color-gold);
+}
+
+.result__title {
+  font-size: var(--h2-size);
+  font-weight: var(--h2-weight);
+  line-height: var(--h2-line);
+}
+
+.result__subtitle {
+  color: var(--color-light-gray);
+  margin-bottom: 16px;
+}
+
+.result .btn {
+  margin-top: 16px;
+}
+
+/* Static confetti around the success icon */
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.confetti--yellow { background: var(--color-yellow); }
+.confetti--green { background: var(--color-green); }
+.confetti--blue { background: var(--color-blue); }
+.confetti--red { background: var(--color-red); }
+
+.confetti--1 { top: -18px; left: -26px; transform: rotate(-35deg); }
+.confetti--2 { top: -30px; left: 44px; transform: rotate(10deg); }
+.confetti--3 { top: -16px; right: -26px; transform: rotate(40deg); }
+.confetti--4 { top: 34px; right: -40px; transform: rotate(75deg); }
+.confetti--5 { bottom: -8px; right: -30px; transform: rotate(-30deg); }
+.confetti--6 { bottom: -10px; left: -30px; transform: rotate(30deg); }
+.confetti--7 { top: 38px; left: -42px; transform: rotate(-70deg); }
+.confetti--8 { top: -36px; left: 4px; transform: rotate(-15deg); }
+
+/* --- Corner decoration --- */
+.decor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.decor__triangle {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+}
+
+/* Physical corners, so the decoration does not mirror in RTL. */
+.decor__triangle--top-start {
+  top: 0;
+  right: 0;
+  background: var(--color-green);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.decor__triangle--top-end {
+  top: 0;
+  left: 0;
+  background: var(--color-yellow);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.decor__triangle--bottom-start {
+  bottom: 0;
+  right: 0;
+  background: var(--color-blue);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.decor__triangle--bottom-end {
+  bottom: 0;
+  left: 0;
+  background: var(--color-red);
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}

@@ -6,6 +6,18 @@
   --color-green: #4cd964;
   --color-blue: #3b82f6;
 
+  /* Derived game-color shades (not in the Style Guide; derived per DESIGN.md) */
+  --color-red-dim: #88292b;
+  --color-yellow-dim: #886c17;
+  --color-green-dim: #2e7845;
+  --color-blue-dim: #264d8e;
+  --color-red-lit: #ff6c64;
+  --color-yellow-lit: #ffd145;
+  --color-green-lit: #79e38b;
+  --color-blue-lit: #6ca1f8;
+  --color-gold: #ffc107;
+  --color-board: #0b111c;
+
   /* Neutral colors */
   --color-charcoal: #1f2937;
   --color-gray: #6b7280;
