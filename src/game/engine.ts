@@ -25,6 +25,7 @@ export interface Game {
   finishShowing(): void;
   press(color: Color): PressResult;
   nextLevel(): void;
+  reset(): void;
 }
 
 // `random` returns a number in [0, 1), like Math.random; injectable for tests.
@@ -92,6 +93,15 @@ export function createGame(random: () => number = Math.random): Game {
       currentLevel++;
       playerInputIndex = 0;
       status = 'showing-sequence';
+    },
+
+    // Back to the start screen state (used when returning from the About screen).
+    reset() {
+      status = 'idle';
+      sequence = [];
+      currentLevel = 1;
+      playerInputIndex = 0;
+      completedLevels = 0;
     },
   };
 }

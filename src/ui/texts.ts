@@ -21,6 +21,11 @@ export const TEXTS = {
   personalBest: 'שיא אישי',
   playAgain: 'שחק שוב',
   board: 'לוח המשחק',
+  about: 'אודות',
+  back: 'חזרה',
+  lastResult: 'התוצאה האחרונה',
+  bestScore: 'השיא האישי',
+  noValue: '—',
 } as const;
 
 export const COLOR_NAMES: Record<Color, string> = {

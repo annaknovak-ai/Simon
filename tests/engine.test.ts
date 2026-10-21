@@ -153,6 +153,26 @@ describe('game engine', () => {
     expect(game.sequence).toHaveLength(1);
   });
 
+  it('reset returns to idle and ignores presses', () => {
+    const game = createGame(seq(0.1, 0.4));
+    game.start();
+    playLevel(game);
+    game.nextLevel();
+    game.finishShowing();
+    game.press(wrongColor(game.sequence[0]));
+    game.reset();
+    expect(snapshot(game)).toEqual({
+      status: 'idle',
+      sequence: [],
+      currentLevel: 1,
+      playerInputIndex: 0,
+      completedLevels: 0,
+    });
+    expect(game.press('red')).toBe('ignored');
+    game.start();
+    expect(game.status).toBe('showing-sequence');
+  });
+
   it('only uses the four game colors', () => {
     const game = createGame();
     game.start();

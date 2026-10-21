@@ -1,0 +1,96 @@
+/* About screen: header with back chevron and two score cards. */
+
+.about__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 8px;
+}
+
+/* Back chevron on the right edge (RTL start), pointing right. */
+.about__back {
+  position: absolute;
+  inset-inline-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-light-gray);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.about__back svg {
+  width: 28px;
+  height: 28px;
+}
+
+.about__back:focus-visible {
+  outline: var(--border-thick) solid var(--color-white);
+}
+
+.about__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 40px;
+}
+
+.about-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: var(--space-y) var(--space-x);
+  border: var(--border-thin) solid rgba(229, 231, 235, 0.15);
+  border-radius: var(--radius-card);
+  background: var(--color-charcoal);
+  box-shadow: var(--shadow-soft);
+}
+
+.about-card__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.about-card__label {
+  color: var(--color-light-gray);
+  font-size: var(--caption-size);
+  line-height: var(--caption-line);
+}
+
+.about-card__value {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.about-card__icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: var(--border-thin) solid rgba(229, 231, 235, 0.15);
+  border-radius: var(--radius-main);
+  background: #2b3646;
+  color: var(--color-light-gray);
+}
+
+.about-card__icon svg {
+  width: 28px;
+  height: 28px;
+}

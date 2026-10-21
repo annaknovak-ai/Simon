@@ -5,12 +5,46 @@
   max-width: 420px;
   min-height: 100dvh;
   margin-inline: auto;
-  gap: 16px;
   padding-top: calc(var(--space-y) + env(safe-area-inset-top));
   padding-bottom: calc(var(--space-y) + env(safe-area-inset-bottom));
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Each screen fills the column; the home "About" link sits at the bottom. */
+.screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.screen--home {
+  gap: 16px;
+}
+
+/* --- About link (bottom of the home screen) --- */
+.about-link {
+  margin-top: auto;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: var(--color-light-gray);
+  font-family: inherit;
+  font-size: var(--caption-size);
+  line-height: var(--caption-line);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.about-link:focus-visible {
+  outline: var(--border-thick) solid var(--color-white);
+  outline-offset: 2px;
+  border-radius: var(--radius-card);
 }
 
 .title {

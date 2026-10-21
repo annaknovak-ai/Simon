@@ -2,6 +2,7 @@
 // owns all timing (sequence playback, success pause, wrong-press flash) and renders each state.
 import { createAudioService } from '../audio/audioService';
 import { createGame, type Color } from '../game/engine';
+import type { ScoreStorage } from '../storage/scoreStorage';
 import { createBoard } from './board';
 import { checkIcon, speakerIcon, trophyIcon, xIcon } from './icons';
 import { TEXTS } from './texts';
@@ -23,7 +24,12 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, te
   return node;
 }
 
-export function mountHomeScreen(root: HTMLElement) {
+interface HomeOptions {
+  storage: ScoreStorage;
+  onAbout: () => void;
+}
+
+export function mountHomeScreen(root: HTMLElement, { storage, onAbout }: HomeOptions) {
   const game = createGame();
   const audio = createAudioService();
   // Every new game bumps the run id; pending timers from an older run do nothing.
@@ -45,12 +51,6 @@ export function mountHomeScreen(root: HTMLElement) {
   };
 
   // --- DOM ---
-  const decor = el('div', 'decor');
-  decor.setAttribute('aria-hidden', 'true');
-  for (const corner of ['top-start', 'top-end', 'bottom-start', 'bottom-end']) {
-    decor.append(el('span', `decor__triangle decor__triangle--${corner}`));
-  }
-
   const title = el('h1', 'title', TEXTS.title);
   const levelPill = el('div', 'level-pill');
   const scoreBlock = el('div', 'score');
@@ -74,7 +74,12 @@ export function mountHomeScreen(root: HTMLElement) {
   const result = el('div', 'result');
   result.setAttribute('aria-live', 'polite');
 
-  root.append(decor, title, levelPill, scoreBlock, board.element, action, result);
+  // Shown only in idle and end states (DESIGN.md decision 7).
+  const aboutLink = el('button', 'about-link', TEXTS.about);
+  aboutLink.type = 'button';
+  aboutLink.addEventListener('click', onAbout);
+
+  root.append(title, levelPill, scoreBlock, board.element, action, result, aboutLink);
 
   // --- Rendering ---
   function setPlaying(visible: boolean) {
@@ -95,6 +100,7 @@ export function mountHomeScreen(root: HTMLElement) {
       status === 'idle' ? TEXTS.instructions : status === 'showing-sequence' ? TEXTS.listening : TEXTS.playerTurn;
     speaker.hidden = status !== 'showing-sequence';
     startButton.hidden = status !== 'idle';
+    aboutLink.hidden = status !== 'idle';
   }
 
   function resultIcon(kind: 'success' | 'fail' | 'won', icon: string) {
@@ -127,6 +133,9 @@ export function mountHomeScreen(root: HTMLElement) {
     setPlaying(false);
     result.replaceChildren();
     const score = game.completedLevels;
+    // Save only when a game actually ends, so a mid-game reload never changes the scores.
+    const saved = kind === 'success' ? null : storage.recordResult(score);
+    aboutLink.hidden = kind === 'success';
     if (kind === 'success') {
       result.append(
         resultIcon('success', checkIcon),
@@ -143,13 +152,12 @@ export function mountHomeScreen(root: HTMLElement) {
         playAgainButton('danger'),
       );
     } else {
-      // Personal best is a temporary in-game value until Score Storage arrives (Milestone 3).
       result.append(
         resultIcon('won', trophyIcon),
         el('h2', 'result__title', TEXTS.wonTitle),
         el('p', 'result__subtitle', TEXTS.wonSubtitle),
         stat(TEXTS.finalScore, score),
-        stat(TEXTS.personalBest, score),
+        stat(TEXTS.personalBest, saved?.bestScore ?? score),
         playAgainButton('info'),
       );
     }
@@ -215,5 +223,16 @@ export function mountHomeScreen(root: HTMLElement) {
     }
   }
 
-  renderPlaying('idle');
+  // Start-screen state; used on first load and when returning from the About screen.
+  function showIdle() {
+    cancelTimers();
+    runId++;
+    game.reset();
+    board.clear();
+    renderPlaying('idle');
+  }
+
+  showIdle();
+
+  return { showIdle };
 }
