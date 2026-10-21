@@ -1,5 +1,6 @@
 // Home screen controller: builds the DOM, routes input to the Game Engine,
 // owns all timing (sequence playback, success pause, wrong-press flash) and renders each state.
+import { createAudioService } from '../audio/audioService';
 import { createGame, type Color } from '../game/engine';
 import { createBoard } from './board';
 import { checkIcon, speakerIcon, trophyIcon, xIcon } from './icons';
@@ -24,6 +25,7 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, te
 
 export function mountHomeScreen(root: HTMLElement) {
   const game = createGame();
+  const audio = createAudioService();
   // Every new game bumps the run id; pending timers from an older run do nothing.
   let runId = 0;
   const timers = new Set<number>();
@@ -161,6 +163,7 @@ export function mountHomeScreen(root: HTMLElement) {
     for (const [i, color] of game.sequence.entries()) {
       if (run !== runId) return;
       board.light(color);
+      audio.play(color, SEQUENCE_LIT);
       await sleep(SEQUENCE_LIT);
       board.unlight(color);
       if (i < game.sequence.length - 1) await sleep(SEQUENCE_GAP);
@@ -171,6 +174,8 @@ export function mountHomeScreen(root: HTMLElement) {
   }
 
   function startGame() {
+    // Must run inside the click so browsers allow audio.
+    audio.unlock();
     cancelTimers();
     runId++;
     game.start();
@@ -193,6 +198,7 @@ export function mountHomeScreen(root: HTMLElement) {
     }
 
     board.light(color);
+    audio.play(color, PRESS_LIT);
     if (outcome !== 'correct') board.setLocked(true);
     await sleep(PRESS_LIT);
     board.unlight(color);
